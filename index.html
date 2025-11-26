@@ -23,7 +23,40 @@
   <div style="font-size:1.6em;margin-bottom:30px">Energy <span id="energy">1000</span>/1000</div>
 
   <button id="tap">TAP</button>
+<!-- ====== STARS BOOST BUTTON ====== -->
+<button onclick="buyBoost()" style="background:#fbbf24;color:black;padding:18px 40px;border-radius:30px;font-weight:bold;margin-top:30px;font-size:1.3em;box-shadow:0 10px 30px rgba(251,191,36,0.4);">
+  Boost ×2 (500 Stars)
+</button>
 
+<!-- ====== STARS PAYMENT SCRIPT ====== -->
+<script>
+function buyBoost() {
+  Telegram.WebApp.openInvoice({
+    title: 'Multitap Boost ×2',
+    description: 'Double your earnings forever!',
+    payload: 'multitap_x2_insight_engine',
+    provider_token: '',               // leave empty = official Telegram Stars
+    currency: 'XTR',                  // Stars currency code
+    prices: [
+      { label: '×2 Tap Power Forever', amount: 500 }  // 500 Stars = ~$5–7
+    ],
+    need_name: false,
+    need_phone_number: false,
+    need_email: false,
+    need_shipping_address: false,
+    is_flexible: false
+  });
+}
+
+// Optional: Show success message after payment
+Telegram.WebApp.onEvent('invoice_closed', function(event) {
+  if (event.status === 'paid') {
+    Telegram.WebApp.HapticFeedback.notificationOccurred('success');
+    Telegram.WebApp.showAlert('Boost activated! You now tap ×2 faster!');
+    // Here you can add real ×2 logic later
+  }
+});
+</script>
   <p style="margin-top:40px">Invite friends → +10 000 bonus</p>
 
   <script>
