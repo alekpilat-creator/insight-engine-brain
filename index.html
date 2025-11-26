@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Insight Engine</title>
+  <script type="module">
+    import { useMainButton, useHapticFeedback } from 'https://unpkg.com/@telegram-apps/sdk-react@latest/dist/index.js';
+
+    let coins = 0;
+    let energy = 1000;
+    const maxEnergy = 1000;
+
+    const mainButton = useMainButton();
+    const haptic = useHapticFeedback();
+
+    setInterval(() => {
+      if (energy < maxEnergy) {
+        energy += 2;
+        document.getElementById('energy').textContent = energy;
+        document.getElementById('bar').style.width = (energy/maxEnergy*100)+'%';
+      }
+    }, 1000);
+
+    window.tap = () => {
+      if (energy >= 1) {
+        haptic.impactOccurred('heavy');
+        coins += 1;
+        energy -= 1;
+        document.getElementById('coins').textContent = coins.toLocaleString();
+        document.getElementById('energy').textContent = energy;
+        document.getElementById('bar').style.width = (energy/maxEnergy*100)+'%';
+        mainButton.setText(`Withdraw ${coins.toLocaleString()} $INSIGHT`);
+      }
+    };
+
+    mainButton.setText('Withdraw 0 $INSIGHT');
+    mainButton.show();
+  </script>
+  <style>
+    body { margin:0; font-family:system-ui; background:linear-gradient(#4c1d95,#000); color:white; height:100vh; display:grid; place-items:center; text-align:center; }
+    #tap { width:260px; height:260px; background:#7c3aed; border-radius:50%; font-size:3em; border:none; color:white; }
+    #bar { height:30px; background:#333; border-radius:15px; overflow:hidden; position:relative; width:80%; margin:20px auto; }
+    #fill { height:100%; width:100%; background:linear-gradient(to right,#8b5cf6,#ec4899); transition:width .3s; }
+  </style>
+</head>
+<body>
+  <h1>Insight Engine</h1>
+  <div style="font-size:5em;margin:20px">Brain</div>
+  <h2><span id="coins">0</span> $INSIGHT</h2>
+  <div id="bar"><div id="fill"></div></div>
+  <div>Energy <span id="energy">1000</span> / 1000</div>
+  <button id="tap" onclick="tap()">TAP</button>
+  <p style="margin-top:30px">Invite friends → +10 000 bonus</p>
+</body>
+</html>
